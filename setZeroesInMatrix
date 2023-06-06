@@ -1,0 +1,101 @@
+class Solution {
+    public void setZeroes(int[][] matrix) {
+        
+        //Solution - 1, Brute force approach - TC : O(M*N*(M+N))
+        
+         for(int i = 0; i < matrix.length; i++){
+            for(int j = 0; j < matrix[i].length; j++){
+                if(matrix[i][j] == 0){
+                    for(int k = 0; k < matrix.length; k++){
+                        if(matrix[k][j]!=0)
+                            matrix[k][j] = -999999999;
+                    }
+                    for(int l = 0; l < matrix[i].length; l++){
+                         if(matrix[i][l]!=0)
+                            matrix[i][l] = -999999999;
+                    }
+                }
+            }
+        }
+
+        for(int i = 0; i < matrix.length; i++){
+            for(int j = 0; j < matrix[i].length; j++){
+                if(matrix[i][j] == -999999999){
+                    matrix[i][j] = 0;
+                }
+            }
+        }
+        
+        // Solution - 2, Using extra space to reduce TC to O(M*N) SC - O(M)
+        
+        int m = matrix.length;
+        int n = matrix[0].length;
+        int row[] = new int[m];
+        int col[] = new int[n];
+        
+        for(int i = 0; i < m; i++){
+            for(int j = 0; j < n; j++){
+                if(matrix[i][j] == 0){
+                    row[i]=1;
+                    col[j]=1;
+                }
+            }
+        }
+        
+        for(int i = 0; i < m; i++){
+            for(int j = 0; j < n; j++){
+                if(row[i]==1 || col[j]==1){
+                    matrix[i][j]=0;
+                }
+            }
+        }
+        
+        //SOlution - 3, Optimised approach - TC - O(M*N), SC-O(1)
+        //using the first row and col for as space for keep tracking of zeroes
+        int m = matrix.length;
+        int n = matrix[0].length;
+        int col0 = 1; //To keep track of first cell that is common to both first row and col of a matrix
+        for(int i = 0; i < m; i++){
+            for(int j = 0; j < n; j++){
+                if(matrix[i][j] == 0){
+                   //update row cell to 0
+                    matrix[i][0] = 0;
+                    
+                    if(j!=0){
+                        //update col cell to 0
+                        matrix[0][j] = 0;
+                    }
+                    else{
+                        //update the first col cell to 0
+                        col0 = 0;
+                    }
+                }
+            }
+        }
+        
+        //step - 2 update the matrix to zero based on the first row and col from second row and cols
+        for(int i = 1; i < m; i++){
+            for(int j = 1; j < n; j++){
+                if(matrix[i][j]!= 0){
+                    if(matrix[i][0] == 0 || matrix[0][j] == 0){
+                        matrix[i][j] = 0;
+                    }
+                }
+            }
+        }
+        
+        //Step -3 update the first col and row col cells to zero based on the condition
+        if(matrix[0][0] == 0){
+            for(int i = 0; i < n; i++){
+                matrix[0][i] = 0;
+            }
+        }
+        
+         if(col0 == 0){
+            for(int i = 0; i < m; i++){
+                matrix[i][0] = 0;
+            }
+        }
+        
+    }
+}
