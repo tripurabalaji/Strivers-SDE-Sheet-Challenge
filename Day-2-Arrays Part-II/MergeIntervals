@@ -1,0 +1,25 @@
+class Solution {
+    public int[][] merge(int[][] intervals) {
+        if(intervals.length <= 1)
+            return intervals;
+        
+        //sort the array based on start times
+        Arrays.sort(intervals, (i1, i2) -> Integer.compare(i1[0], i2[0]));
+        
+        List<int[]> result = new ArrayList<>();
+        //variable useful for comparison
+        int[] newInterval = intervals[0];
+        result.add(newInterval);
+        for(int[] interval : intervals){
+        //check if the existing interval end time is greater than start time of new interval then get the max end time of both and update the existing interval
+            if(newInterval[1] >= interval[0])
+                newInterval[1] = Math.max(newInterval[1], interval[1]);
+            else{
+            //if not then there is no overlapping so update the new interval with the latest and add to result
+                newInterval = interval;
+                result.add(newInterval);
+            }
+        }
+        return result.toArray(new int[result.size()][]);
+    }
+}
